@@ -47,6 +47,10 @@ protected:
     virtual void PossessedBy(AController* NewController) override;
 
 private:
+    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+    
+    void CheckForCollisions(float DeltaTime);
+
     void MoveTank(const FInputActionInstance& Value);
     void TurnTank(const FInputActionInstance& Value);
     void TurnCamera(const FInputActionInstance& Value);
@@ -62,14 +66,14 @@ private:
     float CurrentSpeed = 3.0f;
 
     UPROPERTY(EditAnywhere, Category = "Movement")
-    float StoppingInertia = 100.0f; 
+    float StoppingInertia = 100.0f;
 
     //Amount of ammunition
     UPROPERTY(EditDefaultsOnly, Category = "Ammo")
-    int32 MaxAmmo = 10; 
+    int32 MaxAmmo = 10;
 
     UPROPERTY(EditDefaultsOnly, Category = "Ammo")
-    int32 CurrentAmmo = 0; 
+    int32 CurrentAmmo = 0;
 
     FVector ForwardVector;
     FVector Acceleration;
@@ -84,7 +88,7 @@ private:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     UCameraComponent* Camera = nullptr;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
     class UWidgetComponent* HealthWidgetComp = nullptr;
 
@@ -97,6 +101,9 @@ private:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
     float Speed = 300.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Physics", meta = (AllowPrivateAccess = "true"))
+    float ImpulseObjectsBumping = 5000.0f;
 
     // TurnTank
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))

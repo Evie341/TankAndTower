@@ -417,4 +417,3 @@ bool ATurretPawn::CanFire() const
     }
     return GetWorld()->GetTimeSeconds() - LastFireTime >= ShotInterval;
 }
- 

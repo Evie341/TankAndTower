@@ -18,6 +18,8 @@ public:
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	void ApplyExplosionDamage();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	float Damage = 40.0f;
@@ -32,6 +34,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Audio")
 	float TimeDeathEffects = 0.5f;
+
+	float MinimalDamage = 10.0f;
+	float DamageParameter = 1.0f;
 
 	FTimerHandle UnusedHandle;
 
@@ -52,6 +57,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Category")
 	USphereComponent* ExplosionRadius = nullptr;
-
-	float CalculateDamage(float Distance);
 };

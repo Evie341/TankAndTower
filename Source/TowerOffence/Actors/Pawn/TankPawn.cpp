@@ -8,7 +8,7 @@
 
 #include "TowerOffence/Components/HealthComponent.h"
 #include "TowerOffence/UserInterface/HealthBarWidgetBase.h"
- 
+
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
@@ -33,7 +33,7 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     if (IsValid(Input))
     {
-        if (IsValid(IA_MoveTankAxis)) 
+        if (IsValid(IA_MoveTankAxis))
         {
             Input->BindAction(IA_MoveTankAxis, ETriggerEvent::Triggered, this, &ATankPawn::MoveTank);
         }
@@ -61,7 +61,7 @@ void ATankPawn::BeginPlay()
     // Initialize the previous position
     ReloadAmmo();
     SpawnLocation = GetActorLocation();
-    OnAmmoDepleted.Broadcast(CurrentAmmo); 
+    OnAmmoDepleted.Broadcast(CurrentAmmo);
 
     //Health widget update
     if (IsValid(HealthWidgetComp))
@@ -109,14 +109,51 @@ void ATankPawn::Tick(float DeltaTime)
     AddActorWorldRotation(FRotator(0, RotInput * TurnTracksSpeed * DeltaTime, 0));
 
     // RotateTurret
-    RotateTurret(GetControlRotation().Vector()); 
+    RotateTurret(GetControlRotation().Vector());
 
     // Programming Effects/Music
     HandleMoveEffects();
     HandleTurnEffects();
 
+    // Check for collisions
+    CheckForCollisions(DeltaTime);
+
     // Reset inputs
     RotInput = 0.0f;
+}
+// Checks if the item has a collision.
+void ATankPawn::CheckForCollisions(float DeltaTime)
+{
+    TArray<FHitResult> HitResults;
+    FVector StartLocation = GetActorLocation();
+    FVector EndLocation = StartLocation + CurrentVelocity * DeltaTime;
+
+    FCollisionShape CollisionShape = FCollisionShape::MakeBox(GetBaseComponent()->Bounds.BoxExtent);
+    bool bHasHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation, EndLocation, FQuat::Identity, ECC_PhysicsBody, CollisionShape);
+
+    if (bHasHit)
+    {
+        for (const FHitResult& Hit : HitResults)
+        {
+            if (Hit.GetActor() && Hit.GetActor() != this)
+            {
+                OnHit(GetBaseComponent(), Hit.GetActor(), Hit.GetComponent(), FVector::ZeroVector, Hit);
+            }
+        }
+    }
+}
+// Pushing objects with collision and physics.
+void ATankPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+    if (OtherActor && (OtherActor != this) && OtherComp)
+    {
+        if (OtherComp->Mobility == EComponentMobility::Movable && OtherComp->IsSimulatingPhysics())
+        {
+            FVector ForceDirection = OtherActor->GetActorLocation() - GetActorLocation();
+            ForceDirection.Normalize();
+            OtherComp->AddImpulse(ForceDirection * ImpulseObjectsBumping);  
+        }
+    }
 }
 
 void ATankPawn::MoveTank(const FInputActionInstance& Value)
@@ -191,11 +228,11 @@ void ATankPawn::TurnCamera(const FInputActionInstance& Value)
     AddControllerYawInput(MouseInput.X);
     AddControllerPitchInput(MouseInput.Y);
 }
- 
+
 void ATankPawn::FireTower(const FInputActionInstance& Value)
 {
     if (!bIsAlive || !IsValid(GetProjectileSpawnPoint()) || CurrentAmmo <= 0)
-    {        
+    {
         FakeReload();
         return;
     }

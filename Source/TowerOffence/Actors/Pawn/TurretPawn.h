@@ -49,6 +49,8 @@ public:
 	float GetLastFireTime() const { return LastFireTime; }
 	float GetShotInterval() const { return ShotInterval; }
 
+	UPrimitiveComponent* GetBaseComponent() const { return BaseComponent; }
+
 	UPROPERTY(BlueprintAssignable)
 	FOnPawnKilled OnPawnKilled;
 		

@@ -63,23 +63,7 @@ void AProjectile::OnOverlapBegin(UPrimitiveComponent* HitComponent, AActor* Othe
             Root->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         }
 
-        // Apply radial damage with falloff
-        float MaxDistance = ExplosionRadius->GetScaledSphereRadius();
-        float Distance = FVector::Dist(GetActorLocation(), OtherActor->GetActorLocation());
-        float CalculatedDamage = CalculateDamage(Distance);
-
-        UGameplayStatics::ApplyRadialDamage(
-            this,
-            CalculatedDamage,
-            GetActorLocation(),
-            MaxDistance,
-            DamageType,
-            TArray<AActor*>(),
-            this,
-            GetInstigatorController(),
-            true, // bDoFullDamage
-            ECC_Visibility
-        );
+        ApplyExplosionDamage();
 
         GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &AProjectile::StopDeathEffects, TimeDeathEffects, false);
 
@@ -87,12 +71,21 @@ void AProjectile::OnOverlapBegin(UPrimitiveComponent* HitComponent, AActor* Othe
     }
 }
 
-// Damage reduction due to distance
-float AProjectile::CalculateDamage(float Distance)
+void AProjectile::ApplyExplosionDamage()
 {
-    float MaxDistance = ExplosionRadius->GetScaledSphereRadius();
-    float DamageMultiplier = FMath::Clamp(1.0f - (Distance / MaxDistance), 0.0f, 1.0f);
-    return Damage * DamageMultiplier;
+    UGameplayStatics::ApplyRadialDamageWithFalloff(
+        this,
+        Damage, 
+        MinimalDamage, 
+        GetActorLocation(),
+        ExplosionRadius->GetScaledSphereRadius() * 0.5f,// The radius in which the damage is maximum
+        ExplosionRadius->GetScaledSphereRadius(),// Radius in which the damage is reduced to a minimum
+        DamageParameter, 
+        DamageType,
+        TArray<AActor*>(), 
+        this,
+        GetInstigatorController()
+    );
 }
 
 void AProjectile::StopDeathEffects()
