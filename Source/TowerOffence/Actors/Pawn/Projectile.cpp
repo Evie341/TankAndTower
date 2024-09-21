@@ -78,7 +78,7 @@ void AProjectile::ApplyExplosionDamage()
         Damage, 
         MinimalDamage, 
         GetActorLocation(),
-        ExplosionRadius->GetScaledSphereRadius() * 0.5f,// The radius in which the damage is maximum
+        ExplosionRadius->GetScaledSphereRadius() * 0.2f,// The radius in which the damage is maximum
         ExplosionRadius->GetScaledSphereRadius(),// Radius in which the damage is reduced to a minimum
         DamageParameter, 
         DamageType,

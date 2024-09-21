@@ -7,7 +7,6 @@
 #include "TowerOffence/Actors/Player/MyPlayerState.h"
 #include "TowerOffence/Components/HealthComponent.h"
 
-
 ATurretPawn::ATurretPawn(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     PrimaryActorTick.bCanEverTick = true;

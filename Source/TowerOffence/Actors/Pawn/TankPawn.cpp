@@ -118,7 +118,7 @@ void ATankPawn::Tick(float DeltaTime)
     // Check for collisions
     CheckForCollisions(DeltaTime);
 
-    // Reset inputs
+    // Reset inputsа
     RotInput = 0.0f;
 }
 // Checks if the item has a collision.

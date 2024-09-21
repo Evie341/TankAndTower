@@ -23,6 +23,15 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* RestartButton = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ExitButton = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Level")
+	TSoftObjectPtr<UWorld> MainMenuLevel = nullptr;
+
 	UFUNCTION()
 	void OnRestartButtonClicked();
+
+	UFUNCTION()
+	void OnExitButtonClicked();
 }; 

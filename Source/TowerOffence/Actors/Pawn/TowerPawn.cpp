@@ -78,7 +78,6 @@ APawn* ATowerPawn::GetClosestTarget() const
 	return ClosestPawn;
 }
 
-
 void ATowerPawn::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();

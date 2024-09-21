@@ -17,6 +17,10 @@ void UEndGameWidget::Show(bool bIsPlayerWinner)
     {
         RestartButton->OnClicked.AddDynamic(this, &UEndGameWidget::OnRestartButtonClicked);
     }
+    if (IsValid(ExitButton))
+    {
+        ExitButton->OnClicked.AddDynamic(this, &UEndGameWidget::OnExitButtonClicked);
+    }
 
     AddToViewport();
 
@@ -35,4 +39,12 @@ void UEndGameWidget::OnRestartButtonClicked()
         PlayerController->bShowMouseCursor = false;
     }
     UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+}
+
+void UEndGameWidget::OnExitButtonClicked()
+{
+    if (MainMenuLevel.IsNull()) return;
+
+    FString LevelName = MainMenuLevel.ToSoftObjectPath().GetAssetName();
+    UGameplayStatics::OpenLevel(this, FName(*LevelName));
 }

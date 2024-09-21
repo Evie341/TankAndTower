@@ -18,12 +18,7 @@ public:
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	void ApplyExplosionDamage();
-
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
-	float Damage = 40.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UDamageType> DamageType;
 
@@ -31,11 +26,18 @@ private:
 	bool bHasDealtDamage = false;
 
 	void StopDeathEffects();
+	void ApplyExplosionDamage();
 
 	UPROPERTY(EditAnywhere, Category = "Audio")
 	float TimeDeathEffects = 0.5f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+	float Damage = 40.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	float MinimalDamage = 10.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	float DamageParameter = 1.0f;
 
 	FTimerHandle UnusedHandle;
