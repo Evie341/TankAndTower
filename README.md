@@ -1,6 +1,7 @@
 The project implements the player as a tank, and the enemy as a tower.
 The tower is controlled by AI, which is implemented through a behavior tree.
 
+![10](https://github.com/user-attachments/assets/2c20bf98-6a2a-4edc-8a70-09aa89698656)
 ![1](https://github.com/user-attachments/assets/4f3bf4ae-0806-4675-8412-18474d3b2a7a)
 ![2](https://github.com/user-attachments/assets/848bcd44-357a-4927-95af-50e01e15892d)
 ![3](https://github.com/user-attachments/assets/ba11cc94-43d4-4b4d-8cae-fefeac487631)
